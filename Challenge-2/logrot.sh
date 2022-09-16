@@ -9,7 +9,7 @@ touch $logpath
 size_based_rot()
 {
 MaxFileSize=10M
-sh app.sh >> $logpath &
+sh app.sh >> $logpath
 file_size=`du -sh $logpath|awk '{print $1}'`
 if [ $file_size == $MaxFileSize ];then   
         timestamp=`date +%s`
@@ -21,7 +21,7 @@ fi
 time_based_rot()
 {
 cur_date=`date +%m-%d-%Y`
-sh app.sh >> $logpath.$cur_date &
+sh app.sh >> $logpath.$cur_date
 }
 
 if [ $type == "size" ]; then
