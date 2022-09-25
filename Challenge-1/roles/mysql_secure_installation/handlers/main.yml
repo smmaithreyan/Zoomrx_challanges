@@ -1,0 +1,7 @@
+---
+# handlers file for mysql_secure_installation
+ - name: Restart MySQL service
+   become: true
+   service:
+      name: mysql
+      state: restarted

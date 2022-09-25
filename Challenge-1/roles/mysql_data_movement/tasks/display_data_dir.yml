@@ -1,0 +1,10 @@
+---
+ - name: Display MySQL active data directory
+   mysql_query:
+     query: SELECT @@datadir;
+   register: res
+ - set_fact:
+     Data_Directory: "{{ res.query_result }}"
+ - debug:
+     var: Data_Directory
+

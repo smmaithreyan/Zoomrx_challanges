@@ -1,0 +1,20 @@
+---
+# tasks file for new_user_creation
+ - name: Create New MySQL user and grant privilages
+   mysql_user:
+     name: "{{ new_user }}"
+     password: "{{ new_user_pwd }}"
+     host: "{{ host }}"
+     priv: '*.*:ALL,GRANT'
+     state: present
+ - name: Checking MySQL Service Status
+   become: true
+   shell: "systemctl status mysql.service"
+   register: result
+   ignore_errors: yes
+ - set_fact:
+     Mysql_status: "{{ result.stdout.split('\n')[2] }}"
+ - name: MySQL Service Status
+   debug:
+     var: Mysql_status
+

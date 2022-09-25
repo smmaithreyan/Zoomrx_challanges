@@ -1,0 +1,11 @@
+---
+ - name: Checking MySQL Service Status
+   become: true
+   shell: "systemctl status mysql.service"
+   register: result
+   ignore_errors: true
+ - set_fact:
+     MySQL_Status: "{{ result.stdout.split('\n')[2] }}"  
+ - name: MySQL Service Status 
+   debug:
+     var: MySQL_Status     

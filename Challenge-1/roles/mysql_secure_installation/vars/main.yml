@@ -1,0 +1,5 @@
+---
+# vars file for mysql_secure_installation
+  password_policy: STRONG
+  host: localhost
+  user: root 

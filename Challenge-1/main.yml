@@ -1,0 +1,10 @@
+---
+- hosts: database
+  vars_files:
+    - roles/mysql_secure_installation/vars/vault.yml
+  connection: local
+  roles:
+    - install_mysql
+    - mysql_secure_installation
+    - new_user_creation
+    - mysql_data_movement

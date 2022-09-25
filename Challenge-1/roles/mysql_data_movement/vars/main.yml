@@ -1,0 +1,4 @@
+---
+# vars file for mysql_data_movement
+  path: /var/lib/mysql
+  mnt_path: /mnt/volume-01

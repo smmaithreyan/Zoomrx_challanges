@@ -1,0 +1,59 @@
+---
+# tasks file for mysql_data_movement
+ - import_tasks: display_data_dir.yml 
+ - name: Stop MySQL service
+   become: true
+   service:
+     name: mysql
+     state: stopped
+ - name: Copying contents from Source directory to New location
+   become: true
+   synchronize:
+     src: "{{ path }}"
+     dest: "{{ mnt_path }}"
+     archive: yes
+ - name: Move Source directory to backup name
+   become: true
+   shell: "mv {{ path }} {{ path }}.bak" 
+ - name: Pointing data directory to new data location
+   become: true
+   lineinfile:
+     path: /etc/mysql/mysql.conf.d/mysqld.cnf
+     regexp: '^# datadir'
+     line: "datadir=  {{ mnt_path }}/mysql"
+     state: present
+     create: yes  
+ - name: Configuring AppArmor Access control rules
+   become: true
+   lineinfile:
+     path: /etc/apparmor.d/tunables/alias
+     regex: '^# alias {{ path }}'  
+     line: "alias {{ path }} -> {{ mnt_path  }},"
+     state: present
+     create: yes
+ - name: Configuring my.cnf file with new data directory
+   become: true
+   lineinfile:
+     path: /etc/mysql/my.cnf
+     regex: "^datadir"
+     line: "datadir=  {{ mnt_path }}/mysql"
+     state: present
+     create: yes          
+   notify: Restart Apparmor
+ - meta: flush_handlers
+ - name: Make data directory to avoid errors while starting MySQL service
+   become: true
+   shell: "if [ ! -d {{ path }}/mysql ]; then mkdir -p {{ path }}/mysql; fi"
+ - name: Start MySQL service
+   become: true
+   service:
+     name: mysql
+     state: started
+ - import_tasks: mysql_status.yml
+ - import_tasks: display_data_dir.yml
+ - name: Remove Bkp directory
+   become: true
+   shell: "rm -rf {{ path }}.bak"
+   notify: Restart MySQL
+ - meta: flush_handlers    
+ - import_tasks: mysql_status.yml

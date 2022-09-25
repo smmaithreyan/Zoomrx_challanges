@@ -1,0 +1,13 @@
+---
+# handlers file for mysql_data_movement
+ - name: Restart Apparmor
+   become: true
+   service:
+     name: apparmor
+     state: restarted     
+ - name: Restart MySQL 
+   become: true
+   service:
+     name: mysql
+     state: restarted
+

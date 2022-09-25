@@ -1,0 +1,13 @@
+---
+# tasks file for install_mysql
+ - name: Install Mysql-server
+   become: true
+   apt: 
+     name: "{{ item }}"
+     update_cache: yes 
+     state: present
+   with_items:
+    - mysql-server
+    - python3-mysqldb
+   notify: Start MySQL service
+ - meta: flush_handlers
