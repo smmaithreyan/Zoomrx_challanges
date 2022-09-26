@@ -7,11 +7,12 @@
      name: mysql
      state: stopped
  - name: Copying contents from Source directory to New location
-   become: true
+   become: yes
    synchronize:
      src: "{{ path }}"
      dest: "{{ mnt_path }}"
      archive: yes
+   delegate_to: "{{ inventory_hostname }}"    
  - name: Move Source directory to backup name
    become: true
    shell: "mv {{ path }} {{ path }}.bak" 

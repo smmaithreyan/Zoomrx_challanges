@@ -1,6 +1,7 @@
 ---
 # tasks file for mysql_secure_installation
  - name: Installing Validate Password Plugin
+   become: yes
    template:
      src: templates/mysql_conf.j2
      dest: /etc/mysql/my.cnf
@@ -8,6 +9,7 @@
      - Restart MySQL service
  - meta: flush_handlers      
  - name: Setup MySQL root password
+   become: yes
    mysql_user:
      login_host: "{{ host }}"
      login_user: "{{ user }}"
@@ -16,27 +18,33 @@
      password: "{{ mysql_root_pwd }}"
      state: present
  - name: Setting up template for mysql authentication 
+   become: yes
    template:
      src: templates/my.cnf.j2
      dest: ~/.my.cnf
  - name: Disable Remote root login
+   become: yes
    command: 'mysql -NBe "{{ item }}"'
    with_items:
     - DELETE FROM mysql.user WHERE User='{{ user }}' AND Host NOT IN ('{{ host }}', '127.0.0.1', '::1')
  - name: Removing Anonymous Users
+   become: yes
    mysql_user:
      user: ''
      host: "{{ host }}"
      state: absent          
  - name: Removing test database
+   become: yes
    mysql_db: 
      db: test
      state: absent
  - name: Chaning authentication method to auth_socket
+   become: yes
    mysql_user:
      name: root
      plugin: auth_socket
  - name: Delete .my.cnf 
+   become: yes
    file:
       path: ~/.my.cnf
       state: absent          
