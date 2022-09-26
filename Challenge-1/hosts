@@ -1,2 +1,1 @@
-[database]
-127.0.1.1
+database ansible_host=192.241.181.215 ansible_user=zrxadm
